@@ -75,21 +75,40 @@ function getPieceImageSource(piece) {
 }
 
 function setPieceHoldEvents() {
-  let mouseX,
-    mouseY = 0
-
-  document.addEventListener('mousemove', function (event) {
-    mouseX = event.clientX
-    mouseY = event.clientY
-  })
-
   let pieces = document.getElementsByClassName('piece')
   let movePieceInterval
   let hasIntervalStarted = false
 
   for (const piece of pieces) {
-    console.log(piece)
+    // web
     piece.addEventListener('mousedown', function (event) {
+      mouseX = event.clientX
+      mouseY = event.clientY
+
+      if (hasIntervalStarted === false) {
+        piece.style.position = 'absolute'
+
+        curHeldPiece = piece
+        const curHeldPieceStringPosition = piece.parentElement.id.split('')
+
+        curHeldPieceStartingPosition = [
+          parseInt(curHeldPieceStringPosition[0]) - 1,
+          parseInt(curHeldPieceStringPosition[1]) - 1,
+        ]
+
+        movePieceInterval = setInterval(function () {
+          piece.style.top =
+            mouseY - piece.offsetHeight / 2 + window.scrollY + 'px'
+          piece.style.left =
+            mouseX - piece.offsetWidth / 2 + window.scrollX + 'px'
+        }, 1)
+
+        hasIntervalStarted = true
+      }
+    })
+
+    // mobile
+    piece.addEventListener('touchstart', function (event) {
       mouseX = event.clientX
       mouseY = event.clientY
 
@@ -116,7 +135,86 @@ function setPieceHoldEvents() {
     })
   }
 
+  let mouseX = 0
+  let mouseY = 0
+
+  // web
+  document.addEventListener('mousemove', function (event) {
+    mouseX = event.clientX
+    mouseY = event.clientY
+  })
+
+  // mobile
+  document.addEventListener('touchmove', function (event) {
+    mouseX = event.clientX
+    mouseY = event.clientY
+  })
+
+  // web
   document.addEventListener('mouseup', function (event) {
+    window.clearInterval(movePieceInterval)
+
+    if (curHeldPiece != null) {
+      const boardElement = document.querySelector('.board')
+
+      if (
+        event.clientX > boardElement.offsetLeft - window.scrollX &&
+        event.clientX <
+          boardElement.offsetLeft + boardElement.offsetWidth - window.scrollX &&
+        event.clientY > boardElement.offsetTop - window.scrollY &&
+        event.clientY <
+          boardElement.offsetTop + boardElement.offsetHeight - window.scrollY
+      ) {
+        const mousePositionOnBoardX =
+          event.clientX - boardElement.offsetLeft + window.scrollX
+        const mousePositionOnBoardY =
+          event.clientY - boardElement.offsetTop + window.scrollY
+
+        const boardBorderSize = parseInt(
+          getComputedStyle(document.querySelector('.board'), null)
+            .getPropertyValue('border-left-width')
+            .split('px')[0]
+        )
+
+        const xPosition = Math.floor(
+          (mousePositionOnBoardX - boardBorderSize) /
+            document.getElementsByClassName('square')[0].offsetWidth
+        )
+        const yPosition = Math.floor(
+          (mousePositionOnBoardY - boardBorderSize) /
+            document.getElementsByClassName('square')[0].offsetHeight
+        )
+
+        const pieceReleasePosition = [yPosition, xPosition]
+
+        if (
+          !(
+            pieceReleasePosition[0] == curHeldPieceStartingPosition[0] &&
+            pieceReleasePosition[1] == curHeldPieceStartingPosition[1]
+          )
+        ) {
+          if (
+            validateMovement(curHeldPieceStartingPosition, pieceReleasePosition)
+          ) {
+            movePiece(
+              curHeldPiece,
+              curHeldPieceStartingPosition,
+              pieceReleasePosition
+            )
+          }
+        }
+      }
+
+      curHeldPiece.style.position = 'static'
+      curHeldPiece = null
+      curHeldPieceStartingPosition = null
+    }
+
+    hasIntervalStarted = false
+  })
+
+  // mobile
+  document.addEventListener('touchend', function (event) {
     window.clearInterval(movePieceInterval)
 
     if (curHeldPiece != null) {
