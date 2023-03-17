@@ -1,63 +1,82 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,500;0,700;1,400&display=swap');
 
 * {
-    padding: 0;
-    margin: 0;
-    outline: 0;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  outline: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font: 400 14px Roboto, sans-serif;
-    background: #f0f0f5;
-    -webkit-font-smoothing: antialiased;
+  font: 400 16px Roboto, sans-serif;
+  color: #fff;
+  background: #0a0a0a;
+  -webkit-font-smoothing: antialiased;
 }
 
-input, button, textarea {
-    font: 400 18px Roboto, sans-serif;
+input,
+button,
+textarea {
+  font: 400 18px Roboto, sans-serif;
 }
 
 button {
-    cursor: pointer;
+  cursor: pointer;
+}
+
+#title {
+  padding-top: 50px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .board {
-    width: min-content;
-    margin: 32px auto 0;
-    border: 10px solid red;
-    border-radius: 6px;
+  width: min-content;
+  margin: 50px auto 0;
+  border: 0px solid black;
+  border-radius: 6px;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .row {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .square {
-    width: 50px;
-    height: 50px;
+  /* responsive width and height */
+  width: 10vw;
+  height: 10vw;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  max-width: 75px;
+  max-height: 75px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .piece {
-    width: 50px;
-    height: 50px;
+  width: 10vw;
+  height: 10vw;
+
+  max-width: 75px;
+  max-height: 75px;
 }
 
 .black {
-    background: #774C3B;
+  background: #774c3b;
 }
 
 .white {
-    background: #C99468;
+  background: #c99468;
 }
